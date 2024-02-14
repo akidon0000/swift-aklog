@@ -4,10 +4,19 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
         - uses: actions/checkout@v4
         - name: Select Xcode
           run: sudo xcode-select -s "/Applications/Xcode_15.0.1.app"
         - name: build
           run: swift build -v
+
+  test:
+    runs-on: macos-13
+    steps:
+        - uses: actions/checkout@v4
+        - name: Select Xcode
+          run: sudo xcode-select -s "/Applications/Xcode_15.0.1.app"
+        - name: build
+          run: swift test -v
