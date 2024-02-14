@@ -1,14 +1,20 @@
-name: Test
+name: CI
 
-on:
-  push:
+on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: macos-13
+  build:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Select Xcode version
         run: sudo xcode-select -s "/Applications/Xcode_15.0.1.app/Contents/Developer"
-      - name: Test Modules
-        run: make test_modules
+      - name: build
+        run: swift build -v
+
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: test
+        run: swift test -v

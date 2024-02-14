@@ -2,67 +2,58 @@
 // https://docs.swift.org/swift-book
 import Foundation
 
-public protocol LogDestination {
-    func log<T>( _ message: @escaping @autoclosure () -> T, level: LogLevel, filename: String, line: Int)
+protocol AKLoggerProtocol {
+    func trace<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
+    func debug<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
+    func info<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
+    func warn<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
+    func error<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
+    func fatal<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
 }
 
-public struct AKLogger {
-    static var logDestinations: [LogDestination] = [] // インスタンス変数からクラス変数へ変更
+public struct AKLogger: AKLoggerProtocol {
 
-    public static func trace<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.trace, filename: filename, line: line)
+    enum LogLevel: String {
+        case trace  = "TRACE"
+        case debug  = "DEBUG"
+        case info   = "INFO "
+        case warn   = "WARN "
+        case error  = "ERROR"
+        case fatal  = "FATAL"
     }
 
-    public static func debug<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.debug, filename: filename, line: line)
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter
+    }()
+
+    func trace<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .trace, filename: filename, line: line, function: function)
     }
 
-    public static func info<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.info, filename: filename, line: line)
+    func debug<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .debug, filename: filename, line: line, function: function)
     }
 
-    public static func warn<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.warn, filename: filename, line: line)
+    func info<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .info, filename: filename, line: line, function: function)
     }
 
-    public static func error<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.error, filename: filename, line: line)
+    func warn<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .warn, filename: filename, line: line, function: function)
     }
 
-    public static func fatal<T>( _ message: @autoclosure () -> T, filename: String = #file, line: Int = #line) {
-        logInternal(message, level: LogLevel.fatal, filename: filename, line: line)
+    func error<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .error, filename: filename, line: line, function: function)
     }
 
-    fileprivate static func logInternal<T>( _ message: @autoclosure () -> T, level: LogLevel, filename: String, line: Int) {
-        // let cleanedfile = filename // コメントアウトされたコードの扱いを確認
-        for dest in logDestinations {
-            dest.log(message, level: level, filename: filename, line: line)
-        }
-    }
-}
-
-public enum LogLevel: String {
-    case trace  = "TRACE"
-    case debug  = "DEBUG"
-    case info   = "INFO "
-    case warn   = "WARN "
-    case error  = "ERROR"
-    case fatal  = "FATAL"
-}
-
-class ConsoleDestination: LogDestination {
-    let dateFormatter = DateFormatter()
-    let serialLogQueue: DispatchQueue = DispatchQueue(label: "ConsoleDestinationQueue")
-
-    init() {
-        dateFormatter.dateFormat = "HH:mm:ss:SSS"
+    func fatal<T>(_ message: @autoclosure () -> T, filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .fatal, filename: filename, line: line, function: function)
     }
 
-    func log<T>( _ message: @escaping @autoclosure () -> T, level: LogLevel, filename: String, line: Int) {
-        let serialLogQueue: DispatchQueue = DispatchQueue(label: "ConsoleDestinationQueue")
-        serialLogQueue.async {
-            let msg = message()
-            print("\(self.dateFormatter.string(from: Date())):\(level):\(filename):\(line) - \(msg)")
-        }
+    private func log<T>(_ message: @autoclosure () -> T, level: LogLevel, filename: String, line: Int, function: String) {
+        let msg = message()
+        print("\(dateFormatter.string(from: Date())):\(level.rawValue):\(filename):\(line) - \(msg)")
     }
 }
