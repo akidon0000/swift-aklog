@@ -1,11 +1,11 @@
 import XCTest
-@testable import AKLogger
+@testable import AKLog
 
-final class AKLoggerTests: XCTestCase {
+final class AKLogTests: XCTestCase {
 
     func testLogOutput() {
         var loggedMessages: [String] = []
-        var logger = AKLogger()
+        var logger = AKLog()
         logger.logHandler = { message in
             loggedMessages.append(message)
         }
