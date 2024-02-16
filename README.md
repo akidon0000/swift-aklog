@@ -20,7 +20,7 @@
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/akidon0000/swift-aklog", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/akidon0000/swift-aklog", .upToNextMajor(from: "0.1.0")),
     ],
     targets: [
         .target(
