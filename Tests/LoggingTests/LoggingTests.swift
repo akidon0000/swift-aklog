@@ -5,7 +5,7 @@ final class AKLogTests: XCTestCase {
 
     func testLogOutput() {
         var loggedMessages: [String] = []
-        var logger = AKLog()
+        let logger = AKLog.self
         logger.logHandler = { message in
             loggedMessages.append(message)
         }
