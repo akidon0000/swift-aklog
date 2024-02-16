@@ -20,7 +20,7 @@
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/akidon0000/swift-aklog", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/akidon0000/swift-aklog", .upToNextMajor(from: "0.1.0")),
     ],
     targets: [
         .target(
@@ -32,7 +32,7 @@ let package = Package(
 
 #### Xcode
 
-[ドキュメント](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)
+使用方法はこちらの[ドキュメント](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)から
 
 
 ## 使い方

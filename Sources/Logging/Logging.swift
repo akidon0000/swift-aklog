@@ -10,7 +10,7 @@ protocol AKLoggerProtocol {
     func critical<T>(_ message: @autoclosure () -> T, filename: String, line: Int, function: String)
 }
 
-public struct AKLogger: AKLoggerProtocol {
+public struct AKLog: AKLoggerProtocol {
 
     internal var logHandler: (String) -> Void = { message in
         print(message)
@@ -22,6 +22,7 @@ public struct AKLogger: AKLoggerProtocol {
         return formatter.string(from: date)
     }
 
+    // MEMO: 現在はLogLevelのIntは使用していないが、後にレベルごとに出力内容を変える可能性がある。
     private enum LogLevel: Int {
         case trace    = 100
         case debug    = 200
@@ -56,57 +57,56 @@ public struct AKLogger: AKLoggerProtocol {
     }
 
     private var cleanedFilenamesCache: NSCache<AnyObject, AnyObject> = NSCache()
+    // 「フルパス+ファイル名」から「ファイル名」のみに抽出
     private func cleanedFilename(_ filename: String) -> String {
-                if let cleanedfile: String = cleanedFilenamesCache.object(forKey: filename as AnyObject) as? String {
-                    return cleanedfile
-                } else {
-                    var retval = ""
-                    let items = filename.split { $0 == "/" }.map(String.init)
+        if let cleanedfile: String = cleanedFilenamesCache.object(forKey: filename as AnyObject) as? String {
+            return cleanedfile
+        } else {
+            var retval = ""
+            let items = filename.split { $0 == "/" }.map(String.init)
 
-                    if items.count > 0 {
-                        retval = items.last!
-                    }
-                    cleanedFilenamesCache.setObject(retval as AnyObject, forKey: filename as AnyObject)
-                    return retval
-                }
+            if items.count > 0 {
+                retval = items.last!
             }
+            cleanedFilenamesCache.setObject(retval as AnyObject, forKey: filename as AnyObject)
+            return retval
         }
+    }
+}
 
-        extension AKLogger {
-            public func trace<T>(_ message: @autoclosure () -> T,
-                                 filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .trace, filename: filename, line: line, function: function)
-            }
+extension AKLog {
+    public func trace<T>(_ message: @autoclosure () -> T,
+                         filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .trace, filename: filename, line: line, function: function)
+    }
 
-            public func debug<T>(_ message: @autoclosure () -> T,
-                                 filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .debug, filename: filename, line: line, function: function)
-            }
+    public func debug<T>(_ message: @autoclosure () -> T,
+                         filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .debug, filename: filename, line: line, function: function)
+    }
 
-            public func info<T>(_ message: @autoclosure () -> T,
-                                filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .info, filename: filename, line: line, function: function)
-            }
+    public func info<T>(_ message: @autoclosure () -> T,
+                        filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .info, filename: filename, line: line, function: function)
+    }
 
-            public func notice<T>(_ message: @autoclosure () -> T,
-                                  filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .notice, filename: filename, line: line, function: function)
-            }
+    public func notice<T>(_ message: @autoclosure () -> T,
+                          filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .notice, filename: filename, line: line, function: function)
+    }
 
-            public func warn<T>(_ message: @autoclosure () -> T,
-                                filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .warn, filename: filename, line: line, function: function)
-            }
+    public func warn<T>(_ message: @autoclosure () -> T,
+                        filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .warn, filename: filename, line: line, function: function)
+    }
 
-            public func error<T>(_ message: @autoclosure () -> T,
-                                 filename: String = #file, line: Int = #line, function: String = #function) {
-                log(message(), level: .error, filename: filename, line: line, function: function)
-            }
+    public func error<T>(_ message: @autoclosure () -> T,
+                         filename: String = #file, line: Int = #line, function: String = #function) {
+        log(message(), level: .error, filename: filename, line: line, function: function)
+    }
 
-            public func critical<T>(_ message: @autoclosure () -> T,
-                                    filename: String = #file,
-                                    line: Int = #line,
-                                    function: String = #function) {
+    public func critical<T>(_ message: @autoclosure () -> T,
+                            filename: String = #file, line: Int = #line, function: String = #function) {
         log(message(), level: .critical, filename: filename, line: line, function: function)
     }
 }
