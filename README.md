@@ -67,6 +67,6 @@ AKLog.critical("メッセージ")
 
 ![Alt](https://repobeats.axiom.co/api/embed/6ad6de677b5d371146416b8047d9cde9aac4507b.svg "Repobeats analytics image")
 
-参考
-https://github.com/uhooi/swift-string-transform
-https://github.com/melke/SlimLogger
+## 参考
+- https://github.com/uhooi/swift-string-transform
+- https://github.com/melke/SlimLogger
