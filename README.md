@@ -32,7 +32,7 @@ let package = Package(
 
 #### Xcode
 
-[ドキュメント](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)
+使用方法はこちらの[ドキュメント](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)から
 
 
 ## 使い方
@@ -63,6 +63,10 @@ AKLog.error("メッセージ")
 AKLog.critical("メッセージ")
 ```
 
-## 参考
-- https://github.com/uhooi/swift-string-transform
-- https://github.com/melke/SlimLogger
+## 統計
+
+![Alt](https://repobeats.axiom.co/api/embed/6ad6de677b5d371146416b8047d9cde9aac4507b.svg "Repobeats analytics image")
+
+参考
+https://github.com/uhooi/swift-string-transform
+https://github.com/melke/SlimLogger
